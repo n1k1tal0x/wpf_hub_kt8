@@ -1,12 +1,391 @@
-﻿<Window x:Class="wpf_hub_kt8.MainWindow"
+<Window x:Class="wpf_hub_kt8.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:wpf_hub_kt8"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="WPF: лаборатория анимации"
+        Width="1180"
+        Height="980"
+        Background="#FFF7F1E8">
+    <Window.Resources>
+        <Style x:Key="SectionCardStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,0,0,18" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Background" Value="#FFFFFCF7" />
+            <Setter Property="BorderBrush" Value="#FFE2D6C7" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
 
-    </Grid>
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FF2E2925" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+
+        <Style x:Key="HintStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FF6C5F57" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+
+        <Style x:Key="HoverAnimatedButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="18,10" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="Background" Value="#FFE1784A" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#FFD2663A" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1.1"
+                                             Duration="0:0:0.2" />
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1.1"
+                                             Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1"
+                                             Duration="0:0:0.2" />
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1"
+                                             Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="InputHighlightStyle" TargetType="TextBox">
+            <Setter Property="Width" Value="260" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Background" Value="#FFE8FFF1" />
+            <Setter Property="BorderBrush" Value="#FF46A06B" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="White" />
+                    <Setter Property="BorderBrush" Value="#FFB9B1AA" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="MenuItemListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="1" />
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1.06"
+                                                 Duration="0:0:0.18" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1.06"
+                                                 Duration="0:0:0.18" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1"
+                                                 Duration="0:0:0.18" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1"
+                                                 Duration="0:0:0.18" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 1. DoubleAnimation" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Кнопка анимирует изменение своей ширины через DoubleAnimation при каждом нажатии." />
+                    <Button x:Name="WidthAnimationButton"
+                            Width="170"
+                            Height="48"
+                            HorizontalAlignment="Left"
+                            Click="WidthAnimationButton_Click"
+                            Background="#FF2D6A8A"
+                            Foreground="White"
+                            BorderBrush="#FF215068"
+                            FontWeight="SemiBold"
+                            Content="Изменить ширину" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 2. Storyboard" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Прямоугольник автоматически перемещается по области и одновременно пульсирует по размеру." />
+                    <Border Height="220" Background="#FFF2E8DB" CornerRadius="14" Padding="10">
+                        <Canvas ClipToBounds="True">
+                            <Rectangle x:Name="StoryboardRectangle"
+                                       Width="90"
+                                       Height="54"
+                                       RadiusX="10"
+                                       RadiusY="10"
+                                       Fill="#FFDD5D3B"
+                                       Canvas.Left="20"
+                                       Canvas.Top="45"
+                                       RenderTransformOrigin="0.5,0.5">
+                                <Rectangle.RenderTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="RectangleTranslate" />
+                                        <ScaleTransform x:Name="RectangleScale" ScaleX="1" ScaleY="1" />
+                                    </TransformGroup>
+                                </Rectangle.RenderTransform>
+                                <Rectangle.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RectangleTranslate"
+                                                                              Storyboard.TargetProperty="X">
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:2" Value="280" />
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:4" Value="560" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RectangleTranslate"
+                                                                              Storyboard.TargetProperty="Y">
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:2" Value="95" />
+                                                    <SplineDoubleKeyFrame KeyTime="0:0:4" Value="10" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <DoubleAnimation Storyboard.TargetName="RectangleScale"
+                                                                 Storyboard.TargetProperty="ScaleX"
+                                                                 From="1"
+                                                                 To="1.2"
+                                                                 Duration="0:0:0.8"
+                                                                 AutoReverse="True"
+                                                                 RepeatBehavior="Forever" />
+                                                <DoubleAnimation Storyboard.TargetName="RectangleScale"
+                                                                 Storyboard.TargetProperty="ScaleY"
+                                                                 From="1"
+                                                                 To="1.2"
+                                                                 Duration="0:0:0.8"
+                                                                 AutoReverse="True"
+                                                                 RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Rectangle.Triggers>
+                            </Rectangle>
+                        </Canvas>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 3. Триггерная анимация" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Первая кнопка увеличивается при наведении, а текстовое поле меняет цвет, когда в нём есть текст." />
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource HoverAnimatedButtonStyle}" Content="Наведи курсор" />
+                        <StackPanel>
+                            <TextBlock Foreground="#FF6C5F57" Text="Начните ввод, чтобы изменить цвет поля" />
+                            <TextBox Style="{StaticResource InputHighlightStyle}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 4. Управление анимацией из C#" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Эллипс движется по сложной траектории, а кнопки позволяют запускать, ставить на паузу и возобновлять движение." />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Width="150" Height="42" Margin="0,0,10,0" Click="StartCodeAnimationButton_Click">Запустить путь</Button>
+                        <Button Width="120" Height="42" Margin="0,0,10,0" Click="PauseCodeAnimationButton_Click">Пауза</Button>
+                        <Button Width="150" Height="42" Click="ResumeCodeAnimationButton_Click">Продолжить</Button>
+                    </StackPanel>
+                    <Border Height="220" Background="#FFE7F3F9" CornerRadius="14" Padding="10">
+                        <Canvas x:Name="CodeAnimationCanvas" ClipToBounds="True">
+                            <Path Stroke="#FF80ABC0" StrokeThickness="3" Opacity="0.6">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="40,140">
+                                            <BezierSegment Point1="100,10" Point2="230,10" Point3="290,110" />
+                                            <QuadraticBezierSegment Point1="360,180" Point2="460,60" />
+                                            <BezierSegment Point1="530,10" Point2="620,50" Point3="700,145" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <Ellipse Width="34"
+                                     Height="34"
+                                     Fill="#FF2D6A8A"
+                                     Stroke="White"
+                                     StrokeThickness="2"
+                                     Canvas.Left="24"
+                                     Canvas.Top="124">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform x:Name="CodeEllipseTransform" />
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Canvas>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 5. KeyFrames" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Ключевые кадры управляют центром фигуры по маршруту, а соседний элемент плавно появляется и исчезает." />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Margin="0,0,10,0" Background="#FFF9EFE4" CornerRadius="14" Height="200" Padding="10">
+                            <Canvas ClipToBounds="True">
+                                <Path Fill="#FF4AA879">
+                                    <Path.Data>
+                                        <EllipseGeometry x:Name="KeyFrameEllipseGeometry" Center="40,140" RadiusX="18" RadiusY="18" />
+                                    </Path.Data>
+                                    <Path.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <PointAnimationUsingKeyFrames Storyboard.TargetName="KeyFrameEllipseGeometry"
+                                                                                 Storyboard.TargetProperty="Center">
+                                                        <LinearPointKeyFrame KeyTime="0:0:0" Value="40,140" />
+                                                        <SplinePointKeyFrame KeyTime="0:0:1.4" Value="140,40" />
+                                                        <SplinePointKeyFrame KeyTime="0:0:2.6" Value="250,120" />
+                                                        <SplinePointKeyFrame KeyTime="0:0:4" Value="360,60" />
+                                                    </PointAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Path.Triggers>
+                                </Path>
+                            </Canvas>
+                        </Border>
+
+                        <Border Grid.Column="1" Margin="10,0,0,0" Background="#FFF5EADF" CornerRadius="14" Height="200" Padding="18">
+                            <Border x:Name="FadeCard"
+                                    Width="220"
+                                    Height="110"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="#FFAD5C3A"
+                                    CornerRadius="16"
+                                    Opacity="0.2">
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                 From="0.15"
+                                                                 To="1"
+                                                                 Duration="0:0:1.8" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"
+                                           Text="Fade In / Fade Out" />
+                            </Border>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 6. Сложные эффекты" />
+                    <TextBlock Style="{StaticResource HintStyle}"
+                               Text="Выпадающее меню раскрывается с анимацией, а выбранный пункт плавно увеличивается." />
+
+                    <ToggleButton x:Name="MenuToggleButton"
+                                  Width="220"
+                                  Height="46"
+                                  HorizontalAlignment="Left"
+                                  Checked="MenuToggleButton_Checked"
+                                  Unchecked="MenuToggleButton_Unchecked"
+                                  Content="Показать выпадающее меню" />
+
+                    <Border x:Name="MenuPanel"
+                            Margin="0,12,0,0"
+                            Padding="14"
+                            Background="#FFF4E9D9"
+                            CornerRadius="14"
+                            Visibility="Collapsed"
+                            Opacity="0"
+                            RenderTransformOrigin="0.5,0">
+                        <Border.RenderTransform>
+                            <ScaleTransform x:Name="MenuPanelScale" ScaleY="0.8" />
+                        </Border.RenderTransform>
+
+                        <ListBox x:Name="AnimatedMenuList"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 SelectionMode="Single"
+                                 ItemContainerStyle="{StaticResource MenuItemListBoxItemStyle}">
+                            <ListBoxItem IsSelected="True">
+                                <Border Padding="12" Background="#FFE5C9AB" CornerRadius="10">
+                                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="Профиль" />
+                                </Border>
+                            </ListBoxItem>
+                            <ListBoxItem>
+                                <Border Padding="12" Background="#FFE9D7C1" CornerRadius="10">
+                                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="Сообщения" />
+                                </Border>
+                            </ListBoxItem>
+                            <ListBoxItem>
+                                <Border Padding="12" Background="#FFEFE1CF" CornerRadius="10">
+                                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="Настройки" />
+                                </Border>
+                            </ListBoxItem>
+                        </ListBox>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
 </Window>
