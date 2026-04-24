@@ -7,7 +7,8 @@ namespace wpf_hub_kt8;
 
 public partial class MainWindow : Window
 {
-    private readonly Storyboard _ellipseStoryboard = new();
+    private AnimationClock? _ellipseXClock;
+    private AnimationClock? _ellipseYClock;
 
     public MainWindow()
     {
@@ -55,31 +56,34 @@ public partial class MainWindow : Window
             RepeatBehavior = RepeatBehavior.Forever
         };
 
-        Storyboard.SetTarget(xAnimation, CodeEllipseTransform);
-        Storyboard.SetTarget(yAnimation, CodeEllipseTransform);
-        Storyboard.SetTargetProperty(xAnimation, new PropertyPath(TranslateTransform.XProperty));
-        Storyboard.SetTargetProperty(yAnimation, new PropertyPath(TranslateTransform.YProperty));
-
-        _ellipseStoryboard.Children.Add(xAnimation);
-        _ellipseStoryboard.Children.Add(yAnimation);
+        _ellipseXClock = xAnimation.CreateClock();
+        _ellipseYClock = yAnimation.CreateClock();
     }
 
     private void StartCodeAnimationButton_Click(object sender, RoutedEventArgs e)
     {
-        _ellipseStoryboard.Stop(this);
         CodeEllipseTransform.X = 0;
         CodeEllipseTransform.Y = 0;
-        _ellipseStoryboard.Begin(this, true);
+
+        ConfigureEllipseAnimation();
+
+        CodeEllipseTransform.ApplyAnimationClock(TranslateTransform.XProperty, _ellipseXClock);
+        CodeEllipseTransform.ApplyAnimationClock(TranslateTransform.YProperty, _ellipseYClock);
+
+        _ellipseXClock?.Controller?.Begin();
+        _ellipseYClock?.Controller?.Begin();
     }
 
     private void PauseCodeAnimationButton_Click(object sender, RoutedEventArgs e)
     {
-        _ellipseStoryboard.Pause(this);
+        _ellipseXClock?.Controller?.Pause();
+        _ellipseYClock?.Controller?.Pause();
     }
 
     private void ResumeCodeAnimationButton_Click(object sender, RoutedEventArgs e)
     {
-        _ellipseStoryboard.Resume(this);
+        _ellipseXClock?.Controller?.Resume();
+        _ellipseYClock?.Controller?.Resume();
     }
 
     private void MenuToggleButton_Checked(object sender, RoutedEventArgs e)

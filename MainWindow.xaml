@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="WPF: лаборатория анимации"
-        Width="1180"
-        Height="980"
+        Width="980"
+        Height="820"
+        MinWidth="820"
+        MinHeight="700"
+        WindowStartupLocation="CenterScreen"
         Background="#FFF7F1E8">
     <Window.Resources>
         <Style x:Key="SectionCardStyle" TargetType="Border">
@@ -131,7 +134,8 @@
         </Style>
     </Window.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="24">
             <Border Style="{StaticResource SectionCardStyle}">
                 <StackPanel>
@@ -233,11 +237,11 @@
                     <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 4. Управление анимацией из C#" />
                     <TextBlock Style="{StaticResource HintStyle}"
                                Text="Эллипс движется по сложной траектории, а кнопки позволяют запускать, ставить на паузу и возобновлять движение." />
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <WrapPanel Margin="0,0,0,12">
                         <Button Width="150" Height="42" Margin="0,0,10,0" Click="StartCodeAnimationButton_Click">Запустить путь</Button>
                         <Button Width="120" Height="42" Margin="0,0,10,0" Click="PauseCodeAnimationButton_Click">Пауза</Button>
                         <Button Width="150" Height="42" Click="ResumeCodeAnimationButton_Click">Продолжить</Button>
-                    </StackPanel>
+                    </WrapPanel>
                     <Border Height="220" Background="#FFE7F3F9" CornerRadius="14" Padding="10">
                         <Canvas x:Name="CodeAnimationCanvas" ClipToBounds="True">
                             <Path Stroke="#FF80ABC0" StrokeThickness="3" Opacity="0.6">
@@ -272,13 +276,8 @@
                     <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Задание 5. KeyFrames" />
                     <TextBlock Style="{StaticResource HintStyle}"
                                Text="Ключевые кадры управляют центром фигуры по маршруту, а соседний элемент плавно появляется и исчезает." />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Margin="0,0,10,0" Background="#FFF9EFE4" CornerRadius="14" Height="200" Padding="10">
+                    <WrapPanel>
+                        <Border Width="420" Margin="0,0,10,10" Background="#FFF9EFE4" CornerRadius="14" Height="200" Padding="10">
                             <Canvas ClipToBounds="True">
                                 <Path Fill="#FF4AA879">
                                     <Path.Data>
@@ -303,7 +302,7 @@
                             </Canvas>
                         </Border>
 
-                        <Border Grid.Column="1" Margin="10,0,0,0" Background="#FFF5EADF" CornerRadius="14" Height="200" Padding="18">
+                        <Border Width="420" Margin="0,0,0,10" Background="#FFF5EADF" CornerRadius="14" Height="200" Padding="18">
                             <Border x:Name="FadeCard"
                                     Width="220"
                                     Height="110"
@@ -332,7 +331,7 @@
                                            Text="Fade In / Fade Out" />
                             </Border>
                         </Border>
-                    </Grid>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
 
@@ -352,6 +351,7 @@
 
                     <Border x:Name="MenuPanel"
                             Margin="0,12,0,0"
+                            MaxWidth="520"
                             Padding="14"
                             Background="#FFF4E9D9"
                             CornerRadius="14"
