@@ -278,31 +278,11 @@
                                Text="Ключевые кадры управляют центром фигуры по маршруту, а соседний элемент плавно появляется и исчезает." />
                     <WrapPanel>
                         <Border Width="420" Margin="0,0,10,10" Background="#FFF9EFE4" CornerRadius="14" Height="200" Padding="10">
-                            <Canvas ClipToBounds="True">
+                            <Canvas x:Name="KeyFrameCanvas" ClipToBounds="True">
                                 <Path Fill="#FF4AA879">
                                     <Path.Data>
                                         <EllipseGeometry x:Name="KeyFrameEllipseGeometry" Center="40,140" RadiusX="18" RadiusY="18" />
                                     </Path.Data>
-                                    <Path.Triggers>
-                                        <EventTrigger RoutedEvent="Loaded">
-                                            <BeginStoryboard>
-                                                <Storyboard RepeatBehavior="Forever">
-                                                    <PointAnimationUsingKeyFrames Storyboard.TargetName="KeyFrameEllipseGeometry"
-                                                                                 Storyboard.TargetProperty="Center">
-                                                        <LinearPointKeyFrame KeyTime="0:0:0" Value="40,140" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:1.2" Value="162,18" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:3.4" Value="382,128" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:4.08" Value="314,162" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:6.72" Value="50,30" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:6.96" Value="26,18" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:9.84" Value="314,162" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:10.52" Value="382,128" />
-                                                        <LinearPointKeyFrame KeyTime="0:0:12" Value="234,54" />
-                                                    </PointAnimationUsingKeyFrames>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Path.Triggers>
                                 </Path>
                             </Canvas>
                         </Border>

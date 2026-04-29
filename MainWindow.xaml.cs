@@ -7,13 +7,21 @@ namespace wpf_hub_kt8;
 
 public partial class MainWindow : Window
 {
+    private const double KeyFrameSpeedPixelsPerSecond = 180;
     private AnimationClock? _ellipseXClock;
     private AnimationClock? _ellipseYClock;
+    private Point _keyFrameCenter;
+    private Vector _keyFrameVelocity = new(1, -0.7);
+    private TimeSpan _lastKeyFrameRenderTime;
+    private bool _keyFrameAnimationInitialized;
 
     public MainWindow()
     {
         InitializeComponent();
         ConfigureEllipseAnimation();
+        Loaded += MainWindow_Loaded;
+        Closed += MainWindow_Closed;
+        KeyFrameCanvas.SizeChanged += KeyFrameCanvas_SizeChanged;
     }
 
     private void WidthAnimationButton_Click(object sender, RoutedEventArgs e)
@@ -58,6 +66,130 @@ public partial class MainWindow : Window
 
         _ellipseXClock = xAnimation.CreateClock();
         _ellipseYClock = yAnimation.CreateClock();
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        InitializeKeyFrameAnimation();
+    }
+
+    private void MainWindow_Closed(object? sender, EventArgs e)
+    {
+        CompositionTarget.Rendering -= CompositionTarget_Rendering;
+    }
+
+    private void KeyFrameCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (!_keyFrameAnimationInitialized)
+        {
+            InitializeKeyFrameAnimation();
+            return;
+        }
+
+        _keyFrameCenter = ClampPointToCanvas(_keyFrameCenter);
+        KeyFrameEllipseGeometry.Center = _keyFrameCenter;
+    }
+
+    private void InitializeKeyFrameAnimation()
+    {
+        if (KeyFrameCanvas.ActualWidth <= 0 || KeyFrameCanvas.ActualHeight <= 0)
+        {
+            return;
+        }
+
+        _keyFrameVelocity.Normalize();
+        _keyFrameVelocity *= KeyFrameSpeedPixelsPerSecond;
+        _keyFrameCenter = ClampPointToCanvas(new Point(
+            KeyFrameEllipseGeometry.RadiusX + 22,
+            KeyFrameCanvas.ActualHeight - KeyFrameEllipseGeometry.RadiusY - 22));
+
+        KeyFrameEllipseGeometry.Center = _keyFrameCenter;
+        _lastKeyFrameRenderTime = TimeSpan.Zero;
+
+        CompositionTarget.Rendering -= CompositionTarget_Rendering;
+        CompositionTarget.Rendering += CompositionTarget_Rendering;
+        _keyFrameAnimationInitialized = true;
+    }
+
+    private void CompositionTarget_Rendering(object? sender, EventArgs e)
+    {
+        if (!_keyFrameAnimationInitialized || e is not RenderingEventArgs renderingEventArgs)
+        {
+            return;
+        }
+
+        if (_lastKeyFrameRenderTime == TimeSpan.Zero)
+        {
+            _lastKeyFrameRenderTime = renderingEventArgs.RenderingTime;
+            return;
+        }
+
+        double deltaSeconds = (renderingEventArgs.RenderingTime - _lastKeyFrameRenderTime).TotalSeconds;
+        _lastKeyFrameRenderTime = renderingEventArgs.RenderingTime;
+
+        if (deltaSeconds <= 0)
+        {
+            return;
+        }
+
+        double velocityX = _keyFrameVelocity.X;
+        double velocityY = _keyFrameVelocity.Y;
+
+        _keyFrameCenter.X = AdvanceAxis(
+            _keyFrameCenter.X,
+            ref velocityX,
+            KeyFrameEllipseGeometry.RadiusX,
+            KeyFrameCanvas.ActualWidth - KeyFrameEllipseGeometry.RadiusX,
+            deltaSeconds);
+
+        _keyFrameCenter.Y = AdvanceAxis(
+            _keyFrameCenter.Y,
+            ref velocityY,
+            KeyFrameEllipseGeometry.RadiusY,
+            KeyFrameCanvas.ActualHeight - KeyFrameEllipseGeometry.RadiusY,
+            deltaSeconds);
+
+        _keyFrameVelocity = new Vector(velocityX, velocityY);
+        KeyFrameEllipseGeometry.Center = _keyFrameCenter;
+    }
+
+    private Point ClampPointToCanvas(Point point)
+    {
+        double minX = KeyFrameEllipseGeometry.RadiusX;
+        double maxX = Math.Max(minX, KeyFrameCanvas.ActualWidth - KeyFrameEllipseGeometry.RadiusX);
+        double minY = KeyFrameEllipseGeometry.RadiusY;
+        double maxY = Math.Max(minY, KeyFrameCanvas.ActualHeight - KeyFrameEllipseGeometry.RadiusY);
+
+        return new Point(
+            Math.Clamp(point.X, minX, maxX),
+            Math.Clamp(point.Y, minY, maxY));
+    }
+
+    private static double AdvanceAxis(double position, ref double velocity, double min, double max, double deltaSeconds)
+    {
+        if (max <= min)
+        {
+            velocity = 0;
+            return min;
+        }
+
+        double next = position + velocity * deltaSeconds;
+
+        while (next < min || next > max)
+        {
+            if (next < min)
+            {
+                next = min + (min - next);
+                velocity = Math.Abs(velocity);
+            }
+            else if (next > max)
+            {
+                next = max - (next - max);
+                velocity = -Math.Abs(velocity);
+            }
+        }
+
+        return next;
     }
 
     private void StartCodeAnimationButton_Click(object sender, RoutedEventArgs e)
