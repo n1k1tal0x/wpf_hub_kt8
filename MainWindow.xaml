@@ -286,13 +286,18 @@
                                     <Path.Triggers>
                                         <EventTrigger RoutedEvent="Loaded">
                                             <BeginStoryboard>
-                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <Storyboard RepeatBehavior="Forever">
                                                     <PointAnimationUsingKeyFrames Storyboard.TargetName="KeyFrameEllipseGeometry"
                                                                                  Storyboard.TargetProperty="Center">
                                                         <LinearPointKeyFrame KeyTime="0:0:0" Value="40,140" />
-                                                        <SplinePointKeyFrame KeyTime="0:0:1.4" Value="140,40" />
-                                                        <SplinePointKeyFrame KeyTime="0:0:2.6" Value="250,120" />
-                                                        <SplinePointKeyFrame KeyTime="0:0:4" Value="360,60" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:1.2" Value="162,18" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:3.4" Value="382,128" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:4.08" Value="314,162" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:6.72" Value="50,30" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:6.96" Value="26,18" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:9.84" Value="314,162" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:10.52" Value="382,128" />
+                                                        <LinearPointKeyFrame KeyTime="0:0:12" Value="234,54" />
                                                     </PointAnimationUsingKeyFrames>
                                                 </Storyboard>
                                             </BeginStoryboard>
